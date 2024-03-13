@@ -6,13 +6,32 @@
 .globl	openFileReadOnly, closeFile, getRandWord
 
 .data
-wordFilePath:	.asciiz		"./WordleWords.txt"	# path of file
-currentWord:	.asciiz		"12345"			# placeholder for actual word
-userInput:	.asciiz		"12345"			# placeholder for actual user input
-
+wordFilePath:	.asciiz		"C:/Users/vokya/Desktop/Code/CS_2340_HN1_Project_Wordle/WordleWords.txt"	# path of file
+currentWord:	.space		6			# for getting the world
+fileErr:	.asciiz		"File open error"
 
 .text
 
+main:	la	$a0,	wordFilePath
+	jal	openFileReadOnly
+	beq	$v0,	-1,	Err1
+	move	$a0,	$v0
+	li	$a1,	14855
+	jal	getRandWord
+	move	$s0,	$a0
+	move	$a0,	$v0
+	li	$v0,	4
+	syscall
+	move	$a0,	$s0
+	jal	closeFile
+	li	$v0,	10
+	syscall
+Err1:	la	$a0,	fileErr
+	li	$v0,	55
+	li	$a1,	0
+	syscall
+	li	$v0,	10
+	syscall
 # openFileReadOnly
 #
 # Input:
@@ -44,38 +63,77 @@ noErrOpenFile:
 	
 # getRandWord:
 # Receives input as a file descriptor of a file with words length 5 in the form
-#
 # Word1
 # Word2
 # Word3
 # ...
 # Wordn
-#
 # then returns a 5-character word
+#
+# Note: file ends with a newline.
 # 
 # Input:
 # - a0: file descriptor (reset to start)
+# - a1: Amount of words
 # Output:
 # - $v0: address of a 5-word character
 
 # NOTE: NOT DONE
 
 getRandWord:
-
-	# Store file descriptor in stack
-	addi	$sp,	$sp,	-4
-	sw	$a0,	0($sp)
 	
-	#determine amount of max words and store it in $t0
+	# store arguments in stack
+	addi	$sp,	$sp,	-16
+	sw	$a0,	0($sp)		# File descriptor
+	sw	$a1,	4($sp)		# Word amount
+	sw	$s0,	8($sp)
+	sw	$s1,	12($sp)
 	
-	# Gets current time as seed
+	# get random number in range from 0 to #words - 1
+	
+	# get current time as seed, then choose 0 <= i < $a1
 	li	$v0,	30
-	syscall				# seed stored in $v0
-	move	$a0,	$v0
+	syscall
+	# generate rand seed
+	li	$a0,	1
+	move	$a1,	$v0
+	li	$v0,	40
+	syscall
+	# get rand number
 	li	$v0,	42
+	li	$a0,	1
+	lw	$a1,	4($sp)
+	syscall
+	# load this number into $s0
+	move	$s0,	$a0
 	
+	# Choose ($s0 + 1)th word
 	
+	# Loop through the first $s0 words
+	move	$s1,	$zero
+For1:	beq	$s1,	$s0,	Exit1
+	lw	$a0,	0($sp)
+	la	$a1,	currentWord
+	li	$a2,	6
+	syscall
+	addi	$s1,	$s1,	1
+	j	For1
+	# Get the intended word, then add \0 at then end
+Exit1:	lw	$a0,	0($sp)
+	la	$a1,	currentWord
+	li	$a2,	5
+	syscall
+	la	$s0,	currentWord
+	sb	$zero,	5($s0)
 	
+	# Restore registers and return
+	sw	$zero,	5($s0)
+	lw	$a0,	0($sp)		# File descriptor
+	lw	$a1,	4($sp)		# Word amount
+	lw	$s0,	8($sp)
+	lw	$s1,	12($sp)
+	la	$v0,	currentWord
+	jr	$ra
 	
 
 # closeFile
