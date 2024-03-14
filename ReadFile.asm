@@ -11,6 +11,8 @@ fileErr:	.asciiz		"File open error"
 
 .text
 
+# For debug purposes
+
 main:	la	$a0,	wordFilePath
 	jal	openFileReadOnly
 	beq	$v0,	-1,	Err1
@@ -41,7 +43,8 @@ Err1:	la	$a0,	fileErr
 	syscall
 	li	$v0,	10
 	syscall
-	
+
+#
 	
 # openFileReadOnly
 #
@@ -90,6 +93,8 @@ noErrOpenFile:
 # - $v0: address of a 5-word character
 
 # NOTE: NOT DONE
+
+# GitHubDemo
 
 getRandWord:
 	
