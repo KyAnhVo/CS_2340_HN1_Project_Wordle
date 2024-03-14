@@ -7,7 +7,6 @@
 
 .data
 wordFilePath:	.asciiz		"C:/Users/vokya/Desktop/Code/CS_2340_HN1_Project_Wordle/WordleWords.txt"	# path of file
-currentWord:	.space		6			# for getting the world
 fileErr:	.asciiz		"File open error"
 
 .text
@@ -83,11 +82,12 @@ noErrOpenFile:
 getRandWord:
 	
 	# store arguments in stack
-	addi	$sp,	$sp,	-16
+	addi	$sp,	$sp,	-20
 	sw	$a0,	0($sp)		# File descriptor
 	sw	$a1,	4($sp)		# Word amount
 	sw	$s0,	8($sp)
 	sw	$s1,	12($sp)
+	sw	$s2,	16($sp)
 	
 	# get random number in range from 0 to #words - 1
 	
@@ -107,6 +107,11 @@ getRandWord:
 	# load this number into $s0
 	move	$s0,	$a0
 	
+	# Allocate space for word, address of first char in $s2
+	li	$a0,	5
+	syscall
+	move	$s2,	$v0
+	
 	# Choose ($s0 + 1)th word
 	
 	# Loop through the first $s0 words
@@ -114,8 +119,9 @@ getRandWord:
 For1:	beq	$s1,	$s0,	Exit1
 	lw	$a0,	0($sp)
 	la	$a1,	currentWord
-	li	$a2,	6
+	li	$a2,	0($sp)
 	syscall
+	lw	$a0,	0($sp)
 	addi	$s1,	$s1,	1
 	j	For1
 	# Get the intended word, then add \0 at then end
