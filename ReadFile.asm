@@ -14,14 +14,24 @@ fileErr:	.asciiz		"File open error"
 main:	la	$a0,	wordFilePath
 	jal	openFileReadOnly
 	beq	$v0,	-1,	Err1
+	move	$s7,	$v0
 	move	$a0,	$v0
 	li	$a1,	14855
 	jal	getRandWord
-	move	$s0,	$a0
-	move	$a0,	$v0
-	li	$v0,	4
+	li	$s0,	0		# for loop iterative variable
+	li	$s1,	5
+	move	$s2,	$v0
+	li	$v0,	11
+	li	$a0,	10
 	syscall
-	move	$a0,	$s0
+FMain:	beq	$s0,	$s1,	EMain
+	lb	$a0,	($s2)
+	li	$v0,	11
+	syscall
+	addi	$s0,	$s0,	1
+	addi	$s2,	$s2,	1
+	j	FMain
+EMain:	move	$a0,	$s7
 	jal	closeFile
 	li	$v0,	10
 	syscall
@@ -31,6 +41,8 @@ Err1:	la	$a0,	fileErr
 	syscall
 	li	$v0,	10
 	syscall
+	
+	
 # openFileReadOnly
 #
 # Input:
@@ -46,9 +58,9 @@ openFileReadOnly:
 	sw	$a2, 	4($sp)
 	
 	# open file (descriptor stored in $v0)
-	li	$v0,	13	# open file syscall code
 	li	$a1,	0	# a1 stores flag: read only
 	li	$a2,	0	# a2 stores mode (not applicable for read only)
+	li	$v0,	13	# open file syscall code
 	syscall
 	
 	# return $ra, $a0, $a1, $a2 from stack then return to 
@@ -91,54 +103,54 @@ getRandWord:
 	
 	# get random number in range from 0 to #words - 1
 	
-	# get current time as seed, then choose 0 <= i < $a1
-	li	$v0,	30
-	syscall
-	# generate rand seed
-	li	$a0,	1
-	move	$a1,	$v0
-	li	$v0,	40
-	syscall
 	# get rand number
-	li	$v0,	42
-	li	$a0,	1
 	lw	$a1,	4($sp)
+	li	$v0,	42
 	syscall
 	# load this number into $s0
 	move	$s0,	$a0
 	
 	# Allocate space for word, address of first char in $s2
-	li	$a0,	5
+	li	$a0,	6
+	li	$v0,	9
 	syscall
 	move	$s2,	$v0
 	
-	# Choose ($s0 + 1)th word
+	# choose the ($s0 + 1)th word
 	
 	# Loop through the first $s0 words
 	move	$s1,	$zero
 For1:	beq	$s1,	$s0,	Exit1
 	lw	$a0,	0($sp)
-	la	$a1,	currentWord
-	li	$a2,	0($sp)
-	syscall
+	move	$a1,	$s2
+	li	$a2,	5
+	li	$v0,	14
+	syscall	
+					# read the word Word
 	lw	$a0,	0($sp)
+	move	$a1,	$s2
+	addi	$a1,	$a1,	5
+	li	$a2,	1
+	li	$v0,	14
+	syscall				# read the newline character
+	
 	addi	$s1,	$s1,	1
 	j	For1
 	# Get the intended word, then add \0 at then end
 Exit1:	lw	$a0,	0($sp)
-	la	$a1,	currentWord
+	move	$a1,	$s2
 	li	$a2,	5
 	syscall
-	la	$s0,	currentWord
-	sb	$zero,	5($s0)
+	sb	$zero,	5($s2)
 	
 	# Restore registers and return
-	sw	$zero,	5($s0)
+	move	$v0,	$s2
 	lw	$a0,	0($sp)		# File descriptor
 	lw	$a1,	4($sp)		# Word amount
 	lw	$s0,	8($sp)
 	lw	$s1,	12($sp)
-	la	$v0,	currentWord
+	lw	$s2,	16($sp)
+	addi	$sp,	$sp,	20
 	jr	$ra
 	
 
