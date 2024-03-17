@@ -128,9 +128,16 @@ getRandWord:
 For1:	beq	$s1,	$s0,	Exit1
 	lw	$a0,	0($sp)
 	move	$a1,	$s2
-	li	$a2,	6
+	li	$a2,	5
 	li	$v0,	14
-	syscall	
+	syscall				# read the word Word
+	lw	$a0,	0($sp)
+	move	$a1,	$s2
+	addi	$a1,	$a1,	5
+	li	$a2,	1
+	li	$v0,	14
+	syscall				# read the newline character
+	
 	addi	$s1,	$s1,	1
 	j	For1
 	# Get the intended word, then add \0 at then end
