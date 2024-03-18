@@ -16,24 +16,21 @@ fileErr:	.asciiz		"File open error"
 main:	la	$a0,	wordFilePath
 	jal	openFileReadOnly
 	beq	$v0,	-1,	Err1
-	move	$s7,	$v0
+	move	$s7,	$v0		# store file descriptor in $s7
 	move	$a0,	$v0
 	li	$a1,	14855
 	jal	getRandWord
-	li	$s0,	0		# for loop iterative variable
-	li	$s1,	5
 	move	$s2,	$v0
+	# print newline
 	li	$v0,	11
 	li	$a0,	10
 	syscall
-FMain:	beq	$s0,	$s1,	EMain
-	lb	$a0,	($s2)
-	li	$v0,	11
+	# Print string
+	move	$a0,	$s2
+	li	$v0,	4
 	syscall
-	addi	$s0,	$s0,	1
-	addi	$s2,	$s2,	1
-	j	FMain
-EMain:	move	$a0,	$s7
+	# Close file, end program
+	move	$a0,	$s7
 	jal	closeFile
 	li	$v0,	10
 	syscall
