@@ -6,7 +6,7 @@
 .globl	openFileReadOnly, closeFile, getRandWord
 
 .data
-wordFilePath:	.asciiz		"./WordleWords.txt"	# path of file
+wordFilePath:	.asciiz		"./words.txt"	# path of file
 fileErr:	.asciiz		"File open error"
 
 .text
