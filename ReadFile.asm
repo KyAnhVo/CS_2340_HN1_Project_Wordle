@@ -18,13 +18,9 @@ main:	la	$a0,	wordFilePath
 	beq	$v0,	-1,	Err1
 	move	$s7,	$v0		# store file descriptor in $s7
 	move	$a0,	$v0
-	li	$a1,	14855
+	li	$a1,	24
 	jal	getRandWord
 	move	$s2,	$v0
-	# print newline
-	li	$a0,	10
-	li	$v0,	11
-	syscall
 	# Print string
 	move	$a0,	$s2
 	li	$v0,	4
@@ -65,7 +61,7 @@ openFileReadOnly:
 	# return $ra, $a0, $a1, $a2 from stack then return to 
 	lw	$a1,	0($sp)
 	lw	$a2,	4($sp)
-	addi	$sp,	$sp,	8
+	addi	$sp,	$sp,	14854
 	bge	$v0,	$zero,	noErrOpenFile	# check if file is actually opened
 	li 	$v0,	-1
 noErrOpenFile:
@@ -140,6 +136,7 @@ For1:	beq	$s1,	$s0,	Exit1
 Exit1:	lw	$a0,	0($sp)
 	move	$a1,	$s2
 	li	$a2,	5
+	li	$v0,	14
 	syscall
 	sb	$zero,	5($s2)
 	
