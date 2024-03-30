@@ -22,8 +22,8 @@ main:	la	$a0,	wordFilePath
 	jal	getRandWord
 	move	$s2,	$v0
 	# print newline
-	li	$v0,	11
 	li	$a0,	10
+	li	$v0,	11
 	syscall
 	# Print string
 	move	$a0,	$s2
@@ -42,7 +42,6 @@ Err1:	la	$a0,	fileErr
 	syscall
 
 #
-	
 # openFileReadOnly
 #
 # Input:
