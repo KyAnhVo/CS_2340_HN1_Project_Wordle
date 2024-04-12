@@ -8,6 +8,7 @@
 .data
 wordFilePath:	.asciiz		"./words.txt"	# path of file
 fileErr:	.asciiz		"File open error"
+correctWord:	.asciiz		"abcde"
 
 .text
 
@@ -18,7 +19,7 @@ main:	la	$a0,	wordFilePath
 	beq	$v0,	-1,	Err1
 	move	$s7,	$v0		# store file descriptor in $s7
 	move	$a0,	$v0
-	li	$a1,	24
+	li	$a1,	14854
 	jal	getRandWord
 	move	$s2,	$v0
 	# Print string
@@ -37,7 +38,6 @@ Err1:	la	$a0,	fileErr
 	li	$v0,	10
 	syscall
 
-#
 # openFileReadOnly
 #
 # Input:
@@ -61,7 +61,7 @@ openFileReadOnly:
 	# return $ra, $a0, $a1, $a2 from stack then return to 
 	lw	$a1,	0($sp)
 	lw	$a2,	4($sp)
-	addi	$sp,	$sp,	14854
+	addi	$sp,	$sp,	8
 	bge	$v0,	$zero,	noErrOpenFile	# check if file is actually opened
 	li 	$v0,	-1
 noErrOpenFile:
@@ -84,10 +84,6 @@ noErrOpenFile:
 # Output:
 # - $v0: address of a 5-word character
 
-# NOTE: NOT DONE
-
-# GitHubDemo
-
 getRandWord:
 	
 	# store arguments in stack
@@ -107,11 +103,8 @@ getRandWord:
 	# load this number into $s0
 	move	$s0,	$a0
 	
-	# Allocate space for word, address of first char in $s2
-	li	$a0,	6
-	li	$v0,	9
-	syscall
-	move	$s2,	$v0
+	# get the address of correctWord into $s2
+	la	$s2,	correctWord
 	
 	# choose the ($s0 + 1)th word
 	
