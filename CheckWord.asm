@@ -15,7 +15,7 @@ debugMssg2:	.asciiz		"After"
 .text
 
 # obviously debug function.
-mainDebug:
+mainDebugCheckWord:
 	la	$s0,	debugInp
 	la	$s1,	debugCorr
 	move	$a0,	$s0

@@ -3,7 +3,7 @@
 #			then returns a random letter in that file.
 # closeFile:		input is a file handler, close the file with no output.
 
-.globl	openFileReadOnly, closeFile, getRandWord
+.globl	openFileReadOnly, closeFile, getRandWord, wordFilePath
 
 .data
 wordFilePath:	.asciiz		"./words.txt"	# path of file
@@ -13,8 +13,8 @@ correctWord:	.asciiz		"abcde"
 .text
 
 # For debug purposes
-	
-main:	la	$a0,	wordFilePath
+mainDebugReadFile:
+	la	$a0,	wordFilePath
 	jal	openFileReadOnly
 	beq	$v0,	-1,	Err1
 	move	$s7,	$v0		# store file descriptor in $s7

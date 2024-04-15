@@ -12,7 +12,7 @@ strTest:	.asciiz		"testi"
 # Note: Please use as read-only since multiple displays use the same address with already-set-up display system.
 
 .text
-debugMain:
+mainDebugDisplay:
 	la	$a0,	strTest
 	jal	getStrDisplay
 	move	$t0,	$a0
@@ -36,12 +36,12 @@ getStrDisplay:
 	move	$s2,	$a0
 	li	$s3,	5
 	
-L1:	lb	$t0,	($s2)
+L1Disp:	lb	$t0,	($s2)
 	sb	$t0,	($s1)
 	addi	$s2,	$s2,	1
 	addi	$s1,	$s1,	2
 	addi	$s0,	$s0,	1
-	bne	$s0,	$s3,	L1
+	bne	$s0,	$s3,	L1Disp
 	
 	lw	$s0,	0($sp)
 	lw	$s1,	4($sp)
