@@ -34,6 +34,9 @@ character:
 	.word	0xff81b9a9,	0xb98999ff	#G
 	.word	0xff81a1a1,	0xb9a981ff	#H
 	.word	0xff819181,	0x919181ff	#I
+	.word	0xff81a1a9,	0xb1a981ff	#K
+	.word	0xff81a1a1,	0xa1b181ff	#L
+	.word	0xff818181
 .text
 
 mainDebug:
@@ -108,9 +111,12 @@ outIf:	lw	$s3,	black
 ouLWC1:	# out loop write char 1
 	li	$t1,	0
 inLWC1:	# in loop write char 1
+	andi	$t2,	$s0,	0x80000000
+	beq	$t2,	$zero,	
+wrBla:	
+wrBckg:	
+	bne	$t1,	$s6,	inLWC1	# end inside loop
 	
-	bne	$t1,	4,	inLWC1	# end inside loop
-	addi	$
-	bne	$t0,	4,	ouLWC1 # end outside loop
+	bne	$t0,	$s5,	ouLWC1 # end outside loop
 	
 	
