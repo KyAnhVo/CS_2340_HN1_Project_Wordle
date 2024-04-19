@@ -12,11 +12,8 @@
 green:		.word	0x00228b22	# correct position
 yellow:		.word	0x00ffff00	# wrong position
 grey:		.word	0x00a9a9a9	# not in word
+white:		.word	0x00ffffff	# before check
 black:		.word	0x00000000	# to write word
-
-# datas for keyboard input
-dataRegisterKb:	.word	0xffff0004
-ctrlRegisterKb:	.word	0xffff0000
 
 # Character chart, so each 2 words represent how to draw a char in a 8x8 square
 # so a 0 in binary means no draw and 1 means draw
@@ -71,7 +68,7 @@ allocateBitmapHeapMemory:
 # - $a0: ascii code of char (must be between A (65 or 0x41) and Z (90 or 0x5a))
 # - $a1: starting address of bitmap buffer
 # - $a2: pixel number of top left corner (top left is 0, bottom right is 127)
-# - $a3: -1 for wrong location, 0 for not in word, 1 for right location
+# - $a3: -1 for wrong location, 0 for not in word, 1 for right location, 2 for not checked yet
 # output:
 # - None
 
@@ -83,21 +80,26 @@ writeChar:
 	subi	$s0,	$a0,	65
 	sll	$s0,	$s0,	8
 	addi	$s1,	$s0,	4
-	lw	$s0,	character($s0)
+	lw	$s0,	character($s0)	
 	lw	$s1,	character($s1)
-	li	$t0,	-1
 	
 	# Determine color scheme from $a3
+	# $s2 is background, $s3 is black
+	li	$t0,	-1
 	beq	$a3,	$t0,	wcIfn1
-	li	$t0,	0
+	addi	$t0,	$t0,	1
 	beq	$a3,	$t0,	wcIf0
-	li	$t0,	1
+	addi	$t0,	$t0,	1
 	beq	$a3,	$t0,	wcIfP1
+	addi	$t0,	$t0,	1
+	beq	$a3,	$t0,	wcIfNC
 wcIfN1:	lw	$s2,	yellow
 	j	outIf
 wcIf0:	lw	$s2,	grey
 	j	outIf
 wcIfP1:	lw	$s2,	green
+	j	outIf
+wcIfNC:	lw	$s2,	white
 	j	outIf
 outIf:	lw	$s3,	black
 	
@@ -109,12 +111,13 @@ outIf:	lw	$s3,	black
 	li	$t0,	0		# outside loop iterative var
 	li	$t1,	0		# inside loop iterative var
 ouLWC1:	# out loop write char 1
-	li	$t1,	0
+	move	$t1,	$zero
 inLWC1:	# in loop write char 1
 	andi	$t2,	$s0,	0x80000000
-	beq	$t2,	$zero,	
-wrBla:	
+	bne	$t2,	$zero,	wrBackg
+wrBlac:	
 wrBckg:	
+aftWr:
 	bne	$t1,	$s6,	inLWC1	# end inside loop
 	
 	bne	$t0,	$s5,	ouLWC1 # end outside loop
