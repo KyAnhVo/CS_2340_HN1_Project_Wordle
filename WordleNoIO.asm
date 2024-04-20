@@ -1,6 +1,5 @@
 # Demo low_grade wordle no I/O
 
-
 .data
 userInput:	.asciiz		"abcde"
 guess:		.asciiz		"guess:\n"
