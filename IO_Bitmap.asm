@@ -66,7 +66,7 @@ character:
 	.word	0xff8181a9,	0x91a981ff	# X
 	.word	0xff8181a9,	0xa991a1ff	# Y
 	.word	0xff81bd89,	0x91bd81ff	# Z
-	.word	0xff818181,	0x818181ff	# Blank square
+	.word	0xff818181,	0x818181ff	# Blank square 26
 
 # address of square, which means big square #x's top left corner
 # is at square unit squareAdress[x] and big square ranges from
@@ -120,6 +120,13 @@ allocateBitmapHeapMemory:
 	addi	$sp,	$sp,	4
 	jr	$ra
 
+# reset a square into blank (no char)
+# input:
+# - $a0: square number (0 to 19)
+# - $a1: starting address of bitmap buffer
+
+resetSquare
+
 # Change the whole canvas to black
 # Input:
 # - $a0: starting location
@@ -135,13 +142,13 @@ blacken:
 	li	$s0,	2048
 	sll	$s0,	$s0,	2
 	add	$s0,	$s0,	$a0
-	move	$s1,	$zero			# white
+	move	$s1,	$zero			# black
 	move	$t0,	$a0
 	
 	# loop to draw
-whiteL:	sw	$s1,	($t0)
+blackL:	sw	$s1,	($t0)
 	addi	$t0,	$t0,	4
-	bne	$t0,	$s0, 	whiteL
+	bne	$t0,	$s0, 	blackL
 	
 	lw	$s0,	($sp)
 	lw	$s1,	4($sp)
