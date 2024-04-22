@@ -13,9 +13,18 @@
 # - Base address for display to 0x10040000 (heap).
 # And then press "Reset" then press "Connect to MIPS" before doing anything
 
+.data
+userInput:	"abcde"
+
+.text
+
+
+
+
+
 
 
 # include
 .include	"ReadFile.asm"
 .include	"CheckWord.asm"
-.include	"IO_Bitmap.asm"
+.include	"GameLogic.asm"

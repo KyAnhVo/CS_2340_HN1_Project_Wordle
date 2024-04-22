@@ -120,16 +120,45 @@ allocateBitmapHeapMemory:
 	addi	$sp,	$sp,	4
 	jr	$ra
 
-# reset a square into blank (no char)
-# input:
-# - $a0: square number (0 to 19)
-# - $a1: starting address of bitmap buffer
+# reset the whole canvas into all blank squares
+# Input:
+# - $a0: starting address of bitmap
+# Output:
+# - None
 
-resetSquare:
+resetCanvas:
+	# stack stuff
+	addi	$sp,	$sp,	-20
+	sw	$a0,	($sp)
+	sw	$a1,	4($sp)
+	sw	$a2,	8($sp)
+	sw	$a3,	12($sp)
+	sw	$ra,	16($sp)
+	
+	# setup
+	move	$a1,	$a0
+	li	$a0,	91
+	li	$a2,	20
+	li	$a3,	pre
+resetCanvasLoop:
+	addi	$a2,	$a2,	-1
+	jal	drawChar
+	bne	$a2,	$zero,	resetCanvasLoop
+	
+	# restore reg and return
+	lw	$a0,	($sp)
+	lw	$a1,	4($sp)
+	lw	$a2,	8($sp)
+	lw	$a3,	12($sp)
+	lw	$ra,	16($sp)
+	addi	$sp,	$sp,	20
+	jr	$ra
+	
+	
 
 # Change the whole canvas to black
 # Input:
-# - $a0: starting location
+# - $a0: starting address of bitmap
 # Output:
 # - None
 

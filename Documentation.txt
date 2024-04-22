@@ -65,6 +65,13 @@ allocateBitmapBuffer
 # Note: Please run function allocateBitmapHeapMemory first thing before using any additional heap memory
 # since bitmap display extension is set to such that its memory for DMA is.
 
+resetCanvas
+# description: reset the whole bitmap into all blank squares
+# Input:
+# - $a0: starting address of bitmap
+# Output:
+# - None
+
 blacken:
 # description: change the whole canvas to black
 # Input:
@@ -131,3 +138,18 @@ getCharInput:
 # - None
 # output:
 # - $v0: ascii code of char entered
+
+--------------------------------------------------------------------------------------------------------------------
+GameLogic.asm |
+______________|
+
+enterLetter
+# Enter a letter into the bitmap at square number $a2 and
+# return -1 or 0 or 1 as described below
+# input:
+# - $a0: ascii code of char
+# - $a1: starting address of bitmap buffer
+# - $a2: current square number
+# - $a3: string to be edited
+# ouput:
+# - $v0: -1 if backspace, 1 if alphabet, 0 otherwise
