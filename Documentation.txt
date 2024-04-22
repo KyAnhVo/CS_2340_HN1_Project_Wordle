@@ -56,8 +56,6 @@ ______________|
 # Note: Please run function allocateBitmapHeapMemory first thing before using any additional heap memory
 # since bitmap display extension is set to such that its memory for DMA is the first address in the heap.
 
-.globl right, wrong, none, pre, allocateBitmapHeapMemory, blacken, drawChar
-
 allocateBitmapBuffer
 # description: allocate space for 1024x512 bitmap canvas with each unit square is 16 pixel x 16 pixel
 # input:
