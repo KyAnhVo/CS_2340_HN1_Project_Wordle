@@ -87,3 +87,47 @@ color labels
 # wrong: for wrong position, yellow
 # none:  for not in word, grey
 # pre:   before checking, white
+
+--------------------------------------------------------------------------------------------------------------------
+InputProcessing.asm |
+____________________|
+
+# Note: must do this before any subroutine can be used:
+# Tools -> Keyboard and Display MMIO Simulator
+# Confirm that the middle bar says Fixed transmitter delay, select using slider, set slider to 10
+# Then press Connect to MIPS
+
+isBackspace
+# description: checks if given ascii code is backspace
+# input:
+# - $a0: char
+# output:
+# - $v0: is backspace ? 1 : 0
+
+isUppercase
+# description: checks if given ascii code is upercase
+# input:
+# - $a0: char
+# output:
+# - $v0: is uppercase ? 1 : 0
+
+isLowercase
+# description: checks if given ascii code is lowercase
+# input:
+# - $a0: char
+# output:
+# - $v0: is lowercase ? 1 : 0
+
+makeUppercase
+# description: if char is alphabet, return its uppercase counterpart, else return -1
+# input:
+# - $a0: ascii code
+# output:
+# - $v0: ($a0 is alphabet) ? (make $a0 uppercase) : -1
+
+getCharInput:
+# description: wait and get ascii code from keyboard simulator
+# input:
+# - None
+# output:
+# - $v0: ascii code of char entered

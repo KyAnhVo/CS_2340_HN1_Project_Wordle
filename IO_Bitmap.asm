@@ -125,7 +125,7 @@ allocateBitmapHeapMemory:
 # - $a0: square number (0 to 19)
 # - $a1: starting address of bitmap buffer
 
-resetSquare
+resetSquare:
 
 # Change the whole canvas to black
 # Input:

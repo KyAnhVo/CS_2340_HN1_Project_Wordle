@@ -1,5 +1,5 @@
 # Tools -> Keyboard and Display MMIO Simulator
-# Confirm that the middle bar says Fixed transmitter delay, select using slider
+# Confirm that the middle bar says Fixed transmitter delay, select using slider, set slider to 10
 
 .globl	isUppercase, isLowercase, isBackspace, getCharInput, makeUppercase
 
