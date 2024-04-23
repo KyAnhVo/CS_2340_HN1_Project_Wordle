@@ -86,17 +86,8 @@ mainDebug:
 	move	$a0,	$s0
 	jal	blacken
 	
-	li	$a0,	72
-	move	$a1,	$s0
-	move	$a2,	$zero
-	lw	$a3,	right
 	
-	li	$t0,	20
-ioMBmL:	jal	drawChar
-	addi	$a0,	$a0,	1
-	addi	$a2,	$a2,	1
-	addi	$t0,	$t0,	-1
-	bne	$t0,	$zero,	ioMBmL
+	
 	li	$v0,	10
 	syscall
 
@@ -139,7 +130,7 @@ resetCanvas:
 	move	$a1,	$a0
 	li	$a0,	91
 	li	$a2,	20
-	li	$a3,	pre
+	lw	$a3,	pre
 resetCanvasLoop:
 	addi	$a2,	$a2,	-1
 	jal	drawChar
@@ -335,3 +326,4 @@ endDrw:	addi	$a0,	$a0,	4		# move address to draw up by a word (4 bytes)
 	lw	$t1,	12($sp)
 	addi	$sp,	$sp,	16
 	jr	$ra
+	

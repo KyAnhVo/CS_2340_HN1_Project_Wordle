@@ -104,13 +104,6 @@ ____________________|
 # Confirm that the middle bar says Fixed transmitter delay, select using slider, set slider to 10
 # Then press Connect to MIPS
 
-isBackspace
-# description: checks if given ascii code is backspace
-# input:
-# - $a0: char
-# output:
-# - $v0: is backspace ? 1 : 0
-
 isUppercase
 # description: checks if given ascii code is upercase
 # input:
@@ -132,24 +125,6 @@ makeUppercase
 # output:
 # - $v0: ($a0 is alphabet) ? (make $a0 uppercase) : -1
 
-getCharInput:
-# description: wait and get ascii code from keyboard simulator
-# input:
-# - None
-# output:
-# - $v0: ascii code of char entered
 
---------------------------------------------------------------------------------------------------------------------
-GameLogic.asm |
-______________|
-
-enterLetter
-# Enter a letter into the bitmap at square number $a2 and
-# return -1 or 0 or 1 as described below
-# input:
-# - $a0: ascii code of char
-# - $a1: starting address of bitmap buffer
-# - $a2: current square number
-# - $a3: string to be edited
-# ouput:
-# - $v0: -1 if backspace, 1 if alphabet, 0 otherwise
+abcde
+**^X*
