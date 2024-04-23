@@ -4,8 +4,8 @@
 # Tools -> Bitmap Display
 #
 # In Bitmap Display extension, set:
-# - Unit Width/Height in Pixels to 16 (or 8).
-# - Display Width in Pixels to 1024 (or 512), Display Height in Pixels to 512 (or 256)
+# - Unit Width/Height in Pixels to 8.
+# - Display Width in Pixels to 512, Display Height in Pixels to 512
 # - Base address for display to 0x10040000 (heap).
 # And then press "Reset" then press "Connect to MIPS" before doing anything
 # Note: Please run function allocateBitmapHeapMemory first thing before using any additional heap memory
@@ -73,10 +73,12 @@ character:
 # 0 to 19 (4 guesses, 5 words per guess)
 
 squareAddress:
-	.word	0, 8, 16, 24, 32
-	.word	512, 520, 528, 536, 544
-	.word	1024, 1032, 1040, 1048, 1056
-	.word	1536, 1544, 1552, 1560, 1568
+	.word	520, 528, 536, 544, 552
+	.word	1032, 1040, 1048, 1056, 1064
+	.word	1544, 1552, 1560, 1568, 1576
+	.word	2056, 2064, 2072, 2080, 2088
+	.word	2568, 2576, 2584, 2592, 2600
+	.word	3080, 3088, 3096, 3104, 3112
 
 .text
 mainDebug:
@@ -86,7 +88,25 @@ mainDebug:
 	move	$a0,	$s0
 	jal	blacken
 	
+	li	$a0,	65
+	move	$a1,	$s0
+	li	$a2,	0
+	lw	$a3,	wrong
+	li	$s0,	25
+mainDebugLoop:
+	jal	drawChar
+	addi	$a0,	$a0,	1
+	addi	$a2,	$a2,	1
+	bne	$a2,	$s0,	mainDebugLoop
 	
+	li	$a0,	91
+	li	$a2,	25
+	lw	$a3,	right
+	li	$s0,	30
+mainDebugLoop2:
+	jal	drawChar
+	addi	$a2,	$a2,	1
+	bne	$a2,	$s0,	mainDebugLoop2
 	
 	li	$v0,	10
 	syscall
@@ -103,7 +123,7 @@ mainDebug:
 allocateBitmapHeapMemory:
 	addi	$sp,	$sp,	-4
 	sw	$a0,	0($sp)
-	li	$a0,	2048		# (512 / 16) * (1024 / 16)
+	li	$a0,	4096		# (512 / 16) * (1024 / 16)
 	sll	$a0,	$a0,	2	# shift left 2 since each pixel has size 4 bytes
 	li	$v0,	9		# allocate heap memory
 	syscall
