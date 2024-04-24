@@ -84,29 +84,8 @@ squareAddress:
 mainDebug:
 	jal	allocateBitmapHeapMemory
 	move	$s0,	$v0
-	
 	move	$a0,	$s0
-	jal	blacken
-	
-	li	$a0,	65
-	move	$a1,	$s0
-	li	$a2,	0
-	lw	$a3,	wrong
-	li	$s0,	25
-mainDebugLoop:
-	jal	drawChar
-	addi	$a0,	$a0,	1
-	addi	$a2,	$a2,	1
-	bne	$a2,	$s0,	mainDebugLoop
-	
-	li	$a0,	91
-	li	$a2,	25
-	lw	$a3,	right
-	li	$s0,	30
-mainDebugLoop2:
-	jal	drawChar
-	addi	$a2,	$a2,	1
-	bne	$a2,	$s0,	mainDebugLoop2
+	jal	resetCanvas
 	
 	li	$v0,	10
 	syscall
@@ -139,30 +118,40 @@ allocateBitmapHeapMemory:
 
 resetCanvas:
 	# stack stuff
-	addi	$sp,	$sp,	-20
+	addi	$sp,	$sp,	-24
 	sw	$a0,	($sp)
 	sw	$a1,	4($sp)
 	sw	$a2,	8($sp)
 	sw	$a3,	12($sp)
 	sw	$ra,	16($sp)
+	sw	$s0,	20($sp)
 	
 	# setup
 	move	$a1,	$a0
 	li	$a0,	91
-	li	$a2,	20
+	li	$a2,	25
 	lw	$a3,	pre
 resetCanvasLoop:
 	addi	$a2,	$a2,	-1
 	jal	drawChar
 	bne	$a2,	$zero,	resetCanvasLoop
-	
+
+	li	$s0,	30
+	lw	$a3,	right	
+	li	$a2,	25
+resetCanvasLoop2:
+	jal	drawChar
+	addi	$a2,	$a2,	1
+	bne	$a2,	$s0,	resetCanvasLoop2
+
 	# restore reg and return
 	lw	$a0,	($sp)
 	lw	$a1,	4($sp)
 	lw	$a2,	8($sp)
 	lw	$a3,	12($sp)
 	lw	$ra,	16($sp)
-	addi	$sp,	$sp,	20
+	lw	$s0,	20($sp)
+	addi	$sp,	$sp,	24
 	jr	$ra
 	
 	
