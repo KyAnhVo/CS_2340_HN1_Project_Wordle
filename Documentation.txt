@@ -66,7 +66,7 @@ allocateBitmapBuffer
 # since bitmap display extension is set to such that its memory for DMA is.
 
 resetCanvas
-# description: reset the whole bitmap into all blank squares
+# description: reset the whole bitmap into all blank squares (last line is green due to it being answer line)
 # Input:
 # - $a0: starting address of bitmap
 # Output:
@@ -84,10 +84,28 @@ drawChar
 # input:
 # - $a0: ascii code of char (must be between A (65 or 0x41) and Z (90 or 0x5a) + 91 for blank)
 # - $a1: starting address of bitmap buffer
-# - $a2: square number (between 0 and 29)
+# - $a2: square number (between 0 and 34)
 # - $a3: color code (right, wrong, none, pre)
 # output:
 # - None
+
+drawWord
+# description: draw a word onto the canvas (MSB line 0 -> LSB line 3)
+# Input:	
+# - $a0: starting address
+# - $a1: word to draw
+# - $a2: background color
+# Output:
+# - $v0: word to draw sll 16
+
+drawRow
+# description: draw the MSB of the word onto the designated line
+# Input:	
+# - $a0: starting address
+# - $a1: word to draw
+# - $a2: background color
+# Output:
+# - $v0: word to draw sll 8
 
 printWordWithCheck
 # description: print a line with the user input and the checker string in the bitmap tool
@@ -109,10 +127,6 @@ color labels
 InputProcessing.asm |
 ____________________|
 
-# Note: must do this before any subroutine can be used:
-# Tools -> Keyboard and Display MMIO Simulator
-# Confirm that the middle bar says Fixed transmitter delay, select using slider, set slider to 10
-# Then press Connect to MIPS
 
 isUppercase
 # description: checks if given ascii code is upercase
