@@ -87,11 +87,8 @@ mainDebug:
 	jal	allocateBitmapHeapMemory
 	move	$s0,	$v0
 	
-	move	$a1,	$s0
-	la	$a0,	inputDebug
-	li	$a2,	4
-	la	$a3,	checkerDebug
-	jal	printWordWithCheck
+	move	$a0,	$s0
+	jal	resetCanvas
 	
 	li	$v0,	10
 	syscall
