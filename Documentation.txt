@@ -90,7 +90,7 @@ drawChar
 # - None
 
 printWordWithCheck
-# description: print a line with the user input and the checker string
+# description: print a line with the user input and the checker string in the bitmap tool
 # Input:
 # - $a0: word string
 # - $a1: bitmap buffer
@@ -134,3 +134,21 @@ makeUppercase
 # - $a0: ascii code
 # output:
 # - $v0: ($a0 is alphabet) ? (make $a0 uppercase) : -1
+
+--------------------------------------------------------------------------------------------------------------------
+Sound.asm |
+__________|
+
+rightSound:
+# description: plays the sound for when the user guesses correctly
+# input:
+# - None
+# ouput:
+# - None
+
+wrongSound:
+# description: plays the sound for when the user guesses incorrectly
+# input:
+# - None
+# ouput:
+# - None
