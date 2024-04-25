@@ -11,6 +11,7 @@ ansPrompt:			.asciiz		"\nThe answer is: "
 seperator:			.asciiz		"------------------"
 offset:         		.word		0
 allright:			.asciiz		"^^^^^"
+correctGuess:			.asciiz 	"\nCorrect!"
 
 .text
 
@@ -90,7 +91,7 @@ CheckLengthLoop:
 GetInputAgainNotEnoughChar:
 	# Print Error Message
 	li $v0, 4
-	la $a0, 	errorMessageNotEnoughChar
+	la $a0, errorMessageNotEnoughChar
 	syscall
 	
 	# Go back and try to get valid input again
@@ -99,7 +100,7 @@ GetInputAgainNotEnoughChar:
 GetInputAgainSymbolInput:
 	# Print Error Message
 	li $v0, 4
-	la $a0, 	errorMessageSymbolInput
+	la $a0, errorMessageSymbolInput
 	syscall
 	
 	# Go back and try to get valid input again
@@ -112,7 +113,12 @@ AfterLengthCheck:
 	move	$a0,	$s0
 	move	$a1,	$s1
 	jal	checkWord
-	move $s7, $v0
+	move 	$s7, 	$v0
+	
+	la $a0, userInput
+	jal console_display
+	la $a0, ($s7)
+	jal console_display
 	
 	move	$a0,	$s0
 	move	$a3,	$s7
@@ -140,11 +146,10 @@ GuessedCorrectly:
 # Will be displayed, and the PC will jump towards the end of the program
 # since there are no more attempts needed
 	
-	jal	rightSound
 	j Done
 
 NotFullyGuessed:
-	jal	wrongSound
+
 	move	$a0,	$s0
 	
 	# print newline
@@ -161,26 +166,37 @@ NotFullyGuessed:
 	li	$a0,	'\n'
 	li	$v0,	11
 	syscall
-	
-	
 
 	addi	$s3,	$s3,	1
+	jal wrongSound
 	
 	bne	$s3,	$s4,	LoopGetInput
 
 # Done
 Done:	
-	
 	li	$a1,	0x10040000
 	la	$a3,	allright
 	li	$a2,	5
 	move	$a0,	$s1
 	jal	printWordWithCheck
 	
-	li	$v0,	10
+	la $a0, correctGuess
+	jal print_final_prompt
+	la $a0, ansPrompt
+	jal print_final_prompt
+	move $a0, $s1
+	jal print_final_prompt
+	
+	jal rightSound
+	
+	li $v0,	10
 	syscall
 	
-	
+print_final_prompt:
+	li $v0, 4
+	syscall
+	jr $ra
+
 # address of input in $v0
 input:	
 	addi	$sp,	$sp,	-8
@@ -197,32 +213,37 @@ input:
 	lw	$a1,	4($sp)
 	addi	$sp,	$sp,	8
 	jr	$ra
-
-
-
-rightsound:
-	addi	$sp,	$sp,	-16
-	sw	$a0,	($sp)
-	sw	$a1,	4($sp)
-	sw	$a2,	8($sp)
-	sw	$a3,	12($sp)
 	
-	li	$a1,	2000
-	li	$a2,	80
-	li	$a3,	127
+console_display:
+	addi $sp, $sp, -16
+	sw $a0, ($sp)
+	sw $ra, 4($sp)
+	sw $s0, 8($sp)
+	sw $t0, 12($sp)
 	
-	li	$a2,	60
+	move $s0, $a0
+	
+	li $v0, 11
+	li $a0, '\n'
 	syscall
 	
-	lw	$a0,	($sp)
-	lw	$a1,	4($sp)
-	lw	$a2,	8($sp)
-	lw	$a3,	12($sp)
-	jr	$ra
+	move $a0, $s0
+	jal	getStrDisplay
+	move $a0, $v0
+	li	$v0,	4
+	syscall
 	
+	lw $a0, ($sp)
+	lw $ra, 4($sp)
+	lw $s0, 8($sp)
+	lw $t0, 12($sp)
+	addi $sp, $sp, 16
+	
+	jr $ra 
 
 .include	"ReadFile.asm"
 .include	"CheckWord.asm"
 .include	"IO_Bitmap.asm"
 .include	"InputProcessing.asm"
-.include	"Sound.asm"
+.include	"Display.asm"
+.include 	"Sound.asm"
