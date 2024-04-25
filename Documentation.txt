@@ -90,6 +90,7 @@ drawChar
 # - None
 
 printWordWithCheck
+# description: print a line with the user input and the checker string
 # Input:
 # - $a0: word string
 # - $a1: bitmap buffer

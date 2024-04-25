@@ -140,9 +140,11 @@ GuessedCorrectly:
 # Will be displayed, and the PC will jump towards the end of the program
 # since there are no more attempts needed
 	
+	jal	rightSound
 	j Done
 
 NotFullyGuessed:
+	jal	wrongSound
 	move	$a0,	$s0
 	
 	# print newline
@@ -196,10 +198,31 @@ input:
 	addi	$sp,	$sp,	8
 	jr	$ra
 
+
+
+rightsound:
+	addi	$sp,	$sp,	-16
+	sw	$a0,	($sp)
+	sw	$a1,	4($sp)
+	sw	$a2,	8($sp)
+	sw	$a3,	12($sp)
+	
+	li	$a1,	2000
+	li	$a2,	80
+	li	$a3,	127
+	
+	li	$a2,	60
+	syscall
+	
+	lw	$a0,	($sp)
+	lw	$a1,	4($sp)
+	lw	$a2,	8($sp)
+	lw	$a3,	12($sp)
+	jr	$ra
 	
 
 .include	"ReadFile.asm"
 .include	"CheckWord.asm"
 .include	"IO_Bitmap.asm"
 .include	"InputProcessing.asm"
-.include	"display.asm"
+.include	"Sound.asm"
