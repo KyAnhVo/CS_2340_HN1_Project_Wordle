@@ -40,10 +40,6 @@ LUOg:	lb	$t6,	($s1)
 	bne	$s1,	$t9,	LUOg
 	subi	$s1,	$s1,	5
 	
-	li $v0, 4
-	move $a0, $s1
-	syscall
-	
 	# print newline
 	li	$a0,	'\n'
 	li	$v0,	11
