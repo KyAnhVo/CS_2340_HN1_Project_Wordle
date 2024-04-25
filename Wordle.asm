@@ -21,7 +21,7 @@ main:
 	li	$a0,	0x10040000
 	jal	resetCanvas
 	li	$s3,	0
-	li	$s4,	5
+	li	$s4,	6
 	# get random word stored in $s0
 	la	$a0,	wordFilePath
 	jal	openFileReadOnly
@@ -177,7 +177,7 @@ NotFullyGuessed:
 Done:	
 	li	$a1,	0x10040000
 	la	$a3,	allright
-	li	$a2,	5
+	li	$a2,	6
 	move	$a0,	$s1
 	jal	printWordWithCheck
 	

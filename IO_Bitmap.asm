@@ -81,6 +81,7 @@ squareAddress:
 	.word	2056, 2064, 2072, 2080, 2088
 	.word	2568, 2576, 2584, 2592, 2600
 	.word	3080, 3088, 3096, 3104, 3112
+	.word	3592, 3600, 3608, 3616, 3624
 
 .text
 mainDebug:
@@ -132,16 +133,16 @@ resetCanvas:
 	# setup
 	move	$a1,	$a0
 	li	$a0,	91
-	li	$a2,	25
+	li	$a2,	30
 	lw	$a3,	pre
 resetCanvasLoop:
 	addi	$a2,	$a2,	-1
 	jal	drawChar
 	bne	$a2,	$zero,	resetCanvasLoop
 
-	li	$s0,	30
+	li	$s0,	35
 	lw	$a3,	right	
-	li	$a2,	25
+	li	$a2,	30
 resetCanvasLoop2:
 	jal	drawChar
 	addi	$a2,	$a2,	1
@@ -192,7 +193,7 @@ blackL:	sw	$s1,	($t0)
 # input:
 # - $a0: ascii code of char (must be between A (65 or 0x41) and Z (90 or 0x5a) + 91 for blank)
 # - $a1: starting address of bitmap buffer
-# - $a2: square number (between 0 and 29)
+# - $a2: square number (between 0 and 34)
 # - $a3: color code (right, wrong, none, pre)
 # output:
 # - None
@@ -342,7 +343,7 @@ endDrw:	addi	$a0,	$a0,	4		# move address to draw up by a word (4 bytes)
 # Input:
 # - $a0: word string
 # - $a1: bitmap buffer
-# - $a2: line number, line goes from 0 - 5
+# - $a2: line number, line goes from 0 - 6
 # - $a3: checker string
 # Output:
 # - None
