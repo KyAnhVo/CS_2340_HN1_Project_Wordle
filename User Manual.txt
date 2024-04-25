@@ -1,0 +1,21 @@
+USER MANUAL
+1.	Ensure that whatever MIPS the user uses (albeit Mars4_5.jar or MarsPlus.jar) must be in the same directory
+	as all the .asm files required and the directory must contain words.txt. If complicated, please use the Mars 
+	that is packaged within the submission zip file.
+2.	Open Mars4_5.jar or MarsPlus.jar. Click [Tools] -> [Bitmap Display].
+3.	In Bitmap Display, please change [Unit Width in Pixels] and [Unit Height in Pixels] to [8],
+	change [Display Width in Pixels] and [Display Height in Pixels] to [512]. Change [Base address for display]
+	to [0x10040000 (heap)]. Then press [Connect to MIPS].
+4.	In Mars, click [File] -> [Open…], then type or find and click [Wordle.asm] and then click [Open].
+5.	Press F3 then F5, and start playing the game.
+
+TO PLAY THE GAME:
+1.	Write word in console
+2.	Look at the bitmap display tool, it should show words with color.
+	Green means correct position, yellow means incorrect position, and grey means it’s not in the word.
+3.	You have 5 attempts to guess the right word.
+4.	There is no need to press enter, since if you press 5 characters the program will accept it immediately, 
+	so if you find yourself pressing enter, there is something inherently wrong with the word you typed in.
+5.	If you typed in less than 5 letters and/or you typed in more than 1 non-alphabet characters, the game will
+	issue a warning, and the attempt will not be counted.
+6.	After 5 attempts or a correct guess, the word will be shown.
