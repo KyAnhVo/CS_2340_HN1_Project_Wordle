@@ -21,6 +21,8 @@ right:		.word	0x00228b22	# correct position,	green
 wrong:		.word	0x00ffff00	# wrong position,	yellow
 none:		.word	0x00a9a9a9	# not in word,		grey
 pre:		.word	0x00ffffff	# before check,		white
+checkerDebug:	.asciiz	"^^X*X"
+inputDebug:	.asciiz	"BCDEF"
 
 # Character chart, so each 2 words represent how to draw a char in a 8x8 square
 # so a 0 in binary means no draw and 1 means draw
@@ -84,8 +86,12 @@ squareAddress:
 mainDebug:
 	jal	allocateBitmapHeapMemory
 	move	$s0,	$v0
-	move	$a0,	$s0
-	jal	resetCanvas
+	
+	move	$a1,	$s0
+	la	$a0,	inputDebug
+	li	$a2,	4
+	la	$a3,	checkerDebug
+	jal	printWordWithCheck
 	
 	li	$v0,	10
 	syscall
@@ -189,7 +195,7 @@ blackL:	sw	$s1,	($t0)
 # input:
 # - $a0: ascii code of char (must be between A (65 or 0x41) and Z (90 or 0x5a) + 91 for blank)
 # - $a1: starting address of bitmap buffer
-# - $a2: square number (between 0 and 19)
+# - $a2: square number (between 0 and 29)
 # - $a3: color code (right, wrong, none, pre)
 # output:
 # - None
@@ -335,4 +341,66 @@ endDrw:	addi	$a0,	$a0,	4		# move address to draw up by a word (4 bytes)
 	lw	$t1,	12($sp)
 	addi	$sp,	$sp,	16
 	jr	$ra
+
+# Input:
+# - $a0: word string
+# - $a1: bitmap buffer
+# - $a2: line number, line goes from 0 - 5
+# - $a3: checker string
+# Output:
+# - None
+
+printWordWithCheck:
+	# stack stuff
+	addi	$sp,	$sp,	-32
+	sw	$a0,	($sp)
+	sw	$a1,	4($sp)
+	sw	$a2,	8($sp)
+	sw	$a3,	12($sp)
+	sw	$t0,	16($sp)
+	sw	$s0,	20($sp)
+	sw	$s1,	24($sp)
+	sw	$s2,	28($sp)
+	sw	$ra,	32($sp)
+
+	mul	$a2,	$a2,	5		# starting square of this line
+	addi	$t0,	$a2,	5		# for [for loop]
+	move	$s0,	$a0			# input
+	move	$s1,	$a3			# checker
 	
+PWWCLo:	lb	$a0,	($s0)			# input character
+	andi	$a0,	$a0,	0x000000ff	# because lb sign-extend
+	
+	# determine color
+	lb	$a3,	($s1)			# check character
+	li	$s2,	'^'
+	beq	$a3,	$s2,	PWWCRight
+	li	$s2,	'*'
+	beq	$a3,	$s2,	PWWCWrong
+PWWCNone:
+	lw	$a3,	none
+	j	PWWCEndCheck
+PWWCRight:
+	lw	$a3,	right
+	j	PWWCEndCheck
+PWWCWrong:
+	lw	$a3,	wrong
+PWWCEndCheck:
+	jal	drawChar
+	addi	$s0,	$s0,	1
+	addi	$s1,	$s1,	1
+	addi	$a2,	$a2,	1
+	bne	$a2,	$t0,	PWWCLo
+	
+	# stack stuff
+	lw	$a0,	($sp)
+	lw	$a1,	4($sp)
+	lw	$a2,	8($sp)
+	lw	$a3,	12($sp)
+	lw	$t0,	16($sp)
+	lw	$s0,	20($sp)
+	lw	$s1,	24($sp)
+	lw	$s2,	28($sp)
+	lw	$ra,	32($sp)
+	addi	$sp,	$sp,	36
+	jr	$ra

@@ -49,8 +49,8 @@ ______________|
 # Tools -> Bitmap Display
 #
 # In Bitmap Display extension, set:
-# - Unit Width/Height in Pixels to 16 (or 8).
-# - Display Width in Pixels to 1024 (or 512), Display Height in Pixels to 512 (or 256)
+# - Unit Width/Height in Pixels to 8.
+# - Display Width in Pixels to 512, Display Height in Pixels to 512
 # - Base address for display to 0x10040000 (heap).
 # And then press "Reset" then press "Connect to MIPS" before doing anything
 # Note: Please run function allocateBitmapHeapMemory first thing before using any additional heap memory
@@ -84,9 +84,18 @@ drawChar
 # input:
 # - $a0: ascii code of char (must be between A (65 or 0x41) and Z (90 or 0x5a) + 91 for blank)
 # - $a1: starting address of bitmap buffer
-# - $a2: square number (between 0 and 19)
+# - $a2: square number (between 0 and 29)
 # - $a3: color code (right, wrong, none, pre)
 # output:
+# - None
+
+printWordWithCheck
+# Input:
+# - $a0: word string
+# - $a1: bitmap buffer
+# - $a2: line number, line goes from 0 - 5
+# - $a3: checker string
+# Output:
 # - None
 
 color labels
@@ -124,7 +133,3 @@ makeUppercase
 # - $a0: ascii code
 # output:
 # - $v0: ($a0 is alphabet) ? (make $a0 uppercase) : -1
-
-
-abcde
-**^X*
