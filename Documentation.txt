@@ -1,3 +1,24 @@
+Wordle.asm |
+___________|
+
+main
+# Starting point of the program, no input or output
+
+input
+# description: get null-terminated string of 5 characters from user
+# Input:
+# - None
+# Output:
+# - $v0: address of user string
+
+console_display
+# description: print the string with enhanced (the boxed) form
+# Input:
+# - $a0: address of string of 5 chars
+# Output:
+# - None
+
+--------------------------------------------------------------------------------------------------------------------
 ReadFile.asm |
 _____________|
 
