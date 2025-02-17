@@ -9,6 +9,7 @@ Direction:
 - Set "Unit Width in Pixels" and "Unit Length in Pixels" to 4
 - Set "Display Width in Pixels" and "Display Height in Pixels" to 256
 - Set "Base address for display to "0x10040000 (heap)"
+- Click "Connect to MIPS"
 - On the main Mars4_5 window, click Run -> Assemble then Run -> Go
 - Type the word on the main window's terminal, then the screen shall show the result.
 
